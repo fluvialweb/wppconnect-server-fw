@@ -43,4 +43,4 @@ COPY --from=build /usr/src/wpp-server/ /usr/src/wpp-server/
 EXPOSE 8080
 
 # Entrypoint padrão
-ENTRYPOINT ["node", "dist/index.js"]
+ENTRYPOINT ["node", "dist/server.js"]
