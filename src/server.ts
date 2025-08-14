@@ -16,10 +16,10 @@
 import config from './config';
 import { initServer } from './index';
 
-// Retém a instância para manter o processo vivo
+console.log('🌍 startAllSession:', config.startAllSession); // ← AQUI
+
 const { logger } = initServer(config);
 
-// Opcional: apenas para garantir que o processo não finalize
 setInterval(() => {
   logger.info('Server is alive...');
-}, 1000 * 60 * 5); // Log a cada 5 minutos
+}, 1000 * 60 * 5);
