@@ -40,7 +40,6 @@ COPY --from=build /usr/src/wpp-server/ /usr/src/wpp-server/
 
 # Pasta de sessões (persistência)
 RUN mkdir -p /usr/src/wpp-server/tokens
-VOLUME ["/usr/src/wpp-server/tokens"]
 
 # Expor a porta que o Railway usará
 EXPOSE 8080
