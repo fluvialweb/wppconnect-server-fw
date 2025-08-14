@@ -23,26 +23,24 @@ RUN yarn install --production --pure-lockfile && \
 # Fase de build (instala dev deps e compila TS -> dist)
 FROM base AS build
 WORKDIR /usr/src/wpp-server
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-COPY package.json ./
-RUN yarn install --production=false --pure-lockfile && yarn cache clean
 COPY . .
-RUN yarn build
+RUN yarn install --production=false --pure-lockfile && yarn build && yarn cache clean
 
 # Runtime: Chromium + artefatos compilados
 FROM base
 WORKDIR /usr/src/wpp-server
+
+# Chromium para puppeteer
 RUN apk add --no-cache chromium && yarn cache clean
 
-# Copia código e pasta dist da etapa de build
-COPY . .
-COPY --from=build /usr/src/wpp-server/ /usr/src/wpp-server/
-
-# Pasta de sessões (persistência)
+# Criar pasta persistente antes
 RUN mkdir -p /usr/src/wpp-server/tokens
 
-# Expor a porta que o Railway usará
+# Copia apenas o resultado do build (inclui dist e node_modules completos)
+COPY --from=build /usr/src/wpp-server/ /usr/src/wpp-server/
+
+# Expor a porta esperada pelo Railway
 EXPOSE 8080
 
-# Entry correto do WPPConnect Server
+# Entrypoint padrão
 ENTRYPOINT ["node", "dist/index.js"]
